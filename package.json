@@ -1,0 +1,16 @@
+{
+  "name": "bnet-proxy",
+  "version": "1.0.0",
+  "description": "Battle.net proxy server",
+  "author": "Scott Clarke",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.4",
+    "path": "^0.12.7",
+    "serve-favicon": "^2.5.0"
+  }
+}
