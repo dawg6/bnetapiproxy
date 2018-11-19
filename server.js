@@ -34,7 +34,7 @@ function validURL(u) {
 
     if (u != null) {
         for (var i = 0; i < white_list.length; ++i) {
-            if (u.startsWith(white_list[i])) {
+            if (u.toLowerCase().startsWith(white_list[i])) {
                 return true;
             }
         }
