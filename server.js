@@ -12,6 +12,13 @@ var token = null;
 var axios = require("axios")
 var tokenURL = "https://" + region + ".battle.net/oauth/token"
 
+var white_list = [
+    "https://us.api.blizzard.com/",
+    "https://tw.api.blizzard.com/",
+    "https://kr.api.blizzard.com/",
+    "https://eu.api.blizzard.com/"
+]
+
 if (clientId == null) {
     console.log("Error: CLIENT_ID not set")
     return
@@ -22,48 +29,67 @@ if (clientSecret == null) {
     return
 }
 
+function validURL(u) {
+
+    if (u != null) {
+        for (var i = 0; i < white_list.length; ++i) {
+            if (u.startsWith(white_list[i])) {
+                return true;
+            }
+        }
+    }
+
+    return false
+}
+
 app.get("/*", function (req, res) {
 
-    getToken()
-        .then((token) => {
+    var url = req.url.substr(1)
+    console.log("Request", url)
 
-            if (token == null) {
-                res.setHeader('Content-Type', 'application/json');
-                res.send(JSON.stringify({ error: "Unable to get Token. Check logs for details." }))
-            } else {
-                var url = req.url.substr(1)
-                console.log("Request", url)
+    if (!validURL(url)) {
+        console.log("Invalid URL", url)
+        res.send(JSON.stringify({ error: "Invalid Proxy URL." }))
+    } else {
+        getToken()
+            .then((token) => {
 
-                var opts = {
-                    url: url,
-                    headers: {
-                        'Authorization': 'Bearer ' + token.access_token
-                    }
-                }
+                if (token == null) {
+                    res.setHeader('Content-Type', 'application/json');
+                    res.send(JSON.stringify({ error: "Unable to get Token. Check logs for details." }))
+                } else {
 
-                axios(opts)
-                    .then((resp) => {
-                        res.setHeader('Content-Type', 'application/json');
-                        res.send(JSON.stringify(resp.data))
-                    })
-                    .catch((error) => {
-                        res.setHeader('Content-Type', 'application/json');
-
-                        if (error.response != null) {
-                            console.log("Error", error.response)
-                            res.send(JSON.stringify({ status: error.response.status, statusText: error.response.statusText, headers: error.response.headers, data: error.response.data }))
-                        } else {
-                            console.log("Error", error)
-                            res.send(JSON.stringify({ error: "Exception on server. Check logs for details." }))
+                    var opts = {
+                        url: url,
+                        headers: {
+                            'Authorization': 'Bearer ' + token.access_token
                         }
-                    })
+                    }
+
+                    axios(opts)
+                        .then((resp) => {
+                            res.setHeader('Content-Type', 'application/json');
+                            res.send(JSON.stringify(resp.data))
+                        })
+                        .catch((error) => {
+                            res.setHeader('Content-Type', 'application/json');
+
+                            if (error.response != null) {
+                                console.log("Error", error.response)
+                                res.send(JSON.stringify({ status: error.response.status, statusText: error.response.statusText, headers: error.response.headers, data: error.response.data }))
+                            } else {
+                                console.log("Error", error)
+                                res.send(JSON.stringify({ error: "Exception on server. Check logs for details." }))
+                            }
+                        })
+                }
             }
-        })
-        .catch((error) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify({ error: "Exception on server. Check logs for details." }))
-        })
-})
+            )
+            .catch((error) => {
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify({ error: "Exception on server. Check logs for details." }))
+            })
+    }})
 
 function getToken() {
 
