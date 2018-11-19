@@ -16,7 +16,7 @@ var white_list = [
     "https://us.api.blizzard.com/",
     "https://tw.api.blizzard.com/",
     "https://kr.api.blizzard.com/",
-    "https://cn.api.blizzard.com/",
+    "https://api.blizzard.com.cn/",
     "https://eu.api.blizzard.com/"
 ]
 
