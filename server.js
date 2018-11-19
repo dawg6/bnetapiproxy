@@ -1,4 +1,4 @@
-var port = 8080;
+var port = process.env.PORT || 8080;
 
 var express = require("express");
 var favicon = require('serve-favicon')
@@ -7,14 +7,9 @@ var app = express();
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 var clientId = process.env.CLIENT_ID
 var clientSecret = process.env.CLIENT_SECRET
-var region = "us"
+var region = process.env.API_REGION || "us"
 var token = null;
 var axios = require("axios")
-
-if (process.env.API_REGION != null) {
-    region = process.env.API_REGION
-}
-
 var tokenURL = "https://" + region + ".battle.net/oauth/token"
 
 if (clientId == null) {

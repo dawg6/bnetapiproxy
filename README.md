@@ -28,6 +28,7 @@ Set the following environment variables:
 * CLIENT_ID - (required) set to battle.net API client Id 
 * CLIENT_SECRET - (required) set to battle.net API secret 
 * API_REGION - (optional) set to battle.net API region (e.g. "us" or "eu"; default is "us")
+* PORT - (optional) set to port to listen on (default is 8080)
 
 ### Run as stand alone NodeJS application
 
