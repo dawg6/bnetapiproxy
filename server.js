@@ -8,6 +8,8 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 var clientId = process.env.CLIENT_ID
 var clientSecret = process.env.CLIENT_SECRET
 var region = "us"
+var token = null;
+var axios = require("axios")
 
 if (process.env.API_REGION != null) {
     region = process.env.API_REGION
@@ -68,10 +70,6 @@ app.get("/*", function (req, res) {
         })
 })
 
-
-var token = null;
-var axios = require("axios")
-
 function getToken() {
 
     return new Promise((resolve, reject) => {
@@ -112,8 +110,4 @@ function getToken() {
     })
 }
 
-//getToken();
-
 app.listen(port, () => console.log("Listining on port " + port))
-
-// console.log(process.env)
