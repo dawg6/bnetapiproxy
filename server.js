@@ -78,7 +78,8 @@ app.get("/*", function (req, res) {
 
                             if (error.response != null) {
                                 console.log("Error", error.response)
-                                res.send(JSON.stringify({ status: error.response.status, statusText: error.response.statusText, headers: error.response.headers, data: error.response.data }))
+                                res.status(error.response.status)
+                                res.send(JSON.stringify(error.response.data))
                             } else {
                                 console.log("Error", error)
                                 res.send(JSON.stringify({ error: "Exception on server. Check logs for details." }))
