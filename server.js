@@ -49,6 +49,7 @@ app.get("/*", function (req, res) {
 
     if (!validURL(url)) {
         console.log("Invalid URL", url)
+        res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify({ error: "Invalid Proxy URL." }))
     } else {
         getToken()
