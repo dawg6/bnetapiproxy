@@ -1,9 +1,12 @@
 var port = process.env.PORT || 8080;
 
-var express = require("express");
+const express = require("express");
+const cors = require('cors')
 var favicon = require('serve-favicon')
 var path = require('path')
 var app = express();
+app.use(cors())
+app.options('*', cors())
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 var clientId = process.env.CLIENT_ID
 var clientSecret = process.env.CLIENT_SECRET
