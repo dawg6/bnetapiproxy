@@ -5,7 +5,7 @@
 Environment variables CLIENT_ID and CLIENT_SECRET 
 are used to request an access token. You can also set the environment variable API_REGION to use a different region (default is "us") for the token request.
 
-Application can be run as standalone NodeJS application, or built as a Docker image.
+Application can be run as standalone NodeJS application, or built as a Docker image. An image is available on Docker Hub at https://hub.docker.com/r/dawg6/bnetapiproxy/
 
 ## Build
 
