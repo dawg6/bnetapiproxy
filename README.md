@@ -49,3 +49,11 @@ To access any of the battle.net APIs, prefix the Battel.Net API URL with "http:/
 e.g.,
 
 http://localhost:8080/https://us.api.blizzard.com/wow/realm/status?locale=en_US
+
+
+A live demo version is available on Herku at: https://bnetapiproxy.herokuapp.com
+
+e.g.,
+
+https://bnetapiproxy.herokuapp.com/https://us.api.blizzard.com/wow/realm/status?locale=en_US
+
