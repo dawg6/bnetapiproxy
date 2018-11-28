@@ -1,0 +1,25 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Request JSON Test</title>
+</head>
+
+<body>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+        $.ajax({
+            type: 'GET',
+            url: "http://localhost:8080/https://us.api.blizzard.com/wow/realm/status?locale=en_US",
+            dataType: 'json',
+            success: function (data) {
+                console.log("success", data);
+            },
+            error: function (xhr,status,error) {
+                console.log("error",xhr,status,error);
+            }
+        });
+    </script>
+</body>
+
+</html>

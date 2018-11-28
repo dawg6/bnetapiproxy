@@ -1,13 +1,7 @@
 var port = process.env.PORT || 8080;
 
-const express = require("express");
-const cors = require('cors')
-var favicon = require('serve-favicon')
-var path = require('path')
-var app = express();
-app.use(cors())
-app.options('*', cors())
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+var http = require('http');
+
 var clientId = process.env.CLIENT_ID
 var clientSecret = process.env.CLIENT_SECRET
 var region = process.env.API_REGION || "us"
@@ -46,22 +40,40 @@ function validURL(u) {
     return false
 }
 
-app.get("/*", function (req, res) {
+http.createServer(function (request, response) {
+    response.setHeader('Access-Control-Allow-Origin', '*');
+	response.setHeader('Access-Control-Request-Method', '*');
+	response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+    response.setHeader('Access-Control-Allow-Headers', '*');
+    
+    if (request.method == 'OPTIONS') {
+        response.writeHead(200);
+		response.end();
+		return;
+    }
 
-    var url = req.url.substr(1)
+    var url = request.url.substr(1)
     console.log("Request", url)
+
+    if (url === 'favicon.ico') {
+        response.writeHead(200, {'Content-Type': 'image/x-icon'} );
+        response.end();
+        return;
+    }
 
     if (!validURL(url)) {
         console.log("Invalid URL", url)
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({ error: "Invalid Proxy URL." }))
+        response.writeHead(404, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify({ error: "Invalid Proxy URL." }))
+        response.end()
     } else {
         getToken()
             .then((token) => {
 
                 if (token == null) {
-                    res.setHeader('Content-Type', 'application/json');
-                    res.send(JSON.stringify({ error: "Unable to get Token. Check logs for details." }))
+                    response.writeHead(500, { 'Content-Type': 'application/json' });
+                    response.write(JSON.stringify({ error: "Unable to get Token. Check logs for details." }))
+                    response.end()
                 } else {
 
                     var opts = {
@@ -73,29 +85,36 @@ app.get("/*", function (req, res) {
 
                     axios(opts)
                         .then((resp) => {
-                            res.setHeader('Content-Type', 'application/json');
-                            res.send(JSON.stringify(resp.data))
+                            response.writeHead(200, { 'Content-Type': 'application/json' });
+                            response.write(JSON.stringify(resp.data))
+                            response.end()
                         })
                         .catch((error) => {
-                            res.setHeader('Content-Type', 'application/json');
 
                             if (error.response != null) {
                                 console.log("Error", error.response)
-                                res.status(error.response.status)
-                                res.send(JSON.stringify(error.response.data))
+                                response.writeHead(error.response.status, { 'Content-Type': 'application/json' });
+                                response.write(JSON.stringify(error.response.data))
+                                response.end()
                             } else {
                                 console.log("Error", error)
-                                res.send(JSON.stringify({ error: "Exception on server. Check logs for details." }))
+                                response.writeHead(500, { 'Content-Type': 'application/json' });
+                                response.write(JSON.stringify({ error: "Exception on server. Check logs for details." }))
+                                response.end()
                             }
                         })
                 }
             }
             )
             .catch((error) => {
-                res.setHeader('Content-Type', 'application/json');
-                res.send(JSON.stringify({ error: "Exception on server. Check logs for details." }))
+                response.writeHead(500, { 'Content-Type': 'application/json' });
+                response.write(JSON.stringify({ error: "Exception on server. Check logs for details." }))
+                response.end()
             })
-    }})
+    }
+}).listen(port);
+
+console.log("Server listening on port " + port);
 
 function getToken() {
 
@@ -137,4 +156,3 @@ function getToken() {
     })
 }
 
-app.listen(port, () => console.log("Listining on port " + port))
