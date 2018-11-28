@@ -33,7 +33,7 @@ Set the following environment variables:
 ### Run as stand alone NodeJS application
 
 ```
-CLIENT_ID=my-client-id -e CLIENT_SECRET=my-client-secret npm start
+CLIENT_ID=my-client-id CLIENT_SECRET=my-client-secret npm start
 ```
 
 ### Run Docker Image
