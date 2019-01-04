@@ -17,6 +17,13 @@ var white_list = [
     "https://eu.api.blizzard.com/"
 ]
 
+var noauth_white_list = [
+    "http://auction-api-us.worldofwarcraft.com/",
+    "http://auction-api-eu.worldofwarcraft.com/",
+    "http://auction-api-tw.worldofwarcraft.com/",
+    "http://auction-api-kr.worldofwarcraft.com/"
+]
+
 if (clientId == null) {
     console.log("Error: CLIENT_ID not set")
     return
@@ -32,7 +39,22 @@ function validURL(u) {
     if (u != null) {
         for (var i = 0; i < white_list.length; ++i) {
             if (u.toLowerCase().startsWith(white_list[i])) {
-                return true;
+                return true
+            }
+        }
+
+        return isNoAuth(u)
+    }
+
+    return false
+}
+
+function isNoAuth(u) {
+
+    if (u != null) {
+        for (var i = 0; i < noauth_white_list.length; ++i) {
+            if (u.toLowerCase().startsWith(noauth_white_list[i])) {
+                return true
             }
         }
     }
@@ -77,8 +99,11 @@ http.createServer(function (request, response) {
                 } else {
 
                     var opts = {
-                        url: url,
-                        headers: {
+                        url: url
+                    }
+
+                    if (!isNoAuth(url))  {
+                        opts["headers"] = {
                             'Authorization': 'Bearer ' + token.access_token
                         }
                     }
